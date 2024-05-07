@@ -27,10 +27,27 @@
     .\smb-speedtest.ps1 -LocalPath ".\files" -RemotePath (Get-Content c:\shares.txt) -Verbose
 
 #requires -Version 3.0
+#>
 [CmdletBinding()]
 Param (
     [String]$RemotePath, $LocalPath
 )
+
+function Show-HelpText {
+    Write-Host "Usage of the smb-speedtest.ps1 script:" -ForegroundColor Green
+    Write-Host "`t-RemotePath [String]: Specifies the UNC path for the remote server (e.g., '\\server\share')." -ForegroundColor Yellow
+    Write-Host "`t-LocalPath [String]: Specifies the local directory path where the files are located (e.g., 'C:\Files')." -ForegroundColor Yellow
+    Write-Host "Examples:" -ForegroundColor Green
+    Write-Host "`t.\smb-speedtest.ps1 -LocalPath '.\files' -RemotePath '\\server1\share'" -ForegroundColor Yellow
+    Write-Host "`t.\smb-speedtest.ps1 -LocalPath (Get-Content c:\shares.txt) -RemotePath '\\server2\share'" -ForegroundColor Yellow
+}
+
+# Check if parameters are not provided and display help
+if (-not $RemotePath -or -not $LocalPath) {
+    Write-Host "You must specify both RemotePath and LocalPath." -ForegroundColor Red
+    Show-HelpText
+    exit
+}
 
 Begin {
     Write-Verbose "$(Get-Date): SMB-NetworkSpeed Script begins"
